@@ -70,6 +70,17 @@ bool TestLayer::init() {
     
     this->schedule(schedule_selector(TestLayer::myScheduler));
     
+	this->setTouchEnabled(true);
+
+	followSprite = CCSprite::spriteWithFile("HelloWorld.png");
+	this->addChild(followSprite);
+	followSprite->setScale(0.3f);
+
+	followSprite->setPosition( ccp(200, 150) );
+
+	stateLabel = CCLabelTTF::create("Test","Arial",30);
+	this->addChild(stateLabel);
+	stateLabel->setPosition(ccp(200, 400));
 
 	return true;
 }
@@ -93,4 +104,51 @@ void TestLayer::myScheduler(float dt) {
                                 (y + vy) % (int)height));
         
     }
+}
+
+void TestLayer::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent) {
+	CCTouch *touch = (CCTouch *)pTouches->anyObject();
+	CCPoint point = touch->getLocation();
+	CCLog("Began %f %f", point.x, point.y);
+
+	if (isSpriteIncludePoint(followSprite, point)) 
+		stateLabel->setString("Sprite touched");
+	else
+		stateLabel->setString("Not touched");
+
+
+	
+}
+void TestLayer::ccTouchesMoved(CCSet *pTouches, CCEvent *pEvent) {
+	CCTouch *touch = (CCTouch *)pTouches->anyObject();
+	CCPoint point = touch->getLocation();
+	CCLog("Moved %f %f", point.x, point.y);
+
+	// make followSprite to follow touch location
+	//followSprite->setPosition(point);
+}
+void TestLayer::ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent) {
+	CCTouch *touch = (CCTouch *)pTouches->anyObject();
+	CCPoint point = touch->getLocation();
+	CCLog("Ended %f %f", point.x, point.y);
+}
+void TestLayer::ccTouchesCancelled(CCSet *pTouches, CCEvent *pEvent) {
+	CCLog("Cancelled");
+	CCLog("Cancelled %d", 5);
+}
+
+bool TestLayer::isSpriteIncludePoint(CCSprite* sprite, CCPoint point) {
+	CCPoint spritePosition = sprite->getPosition();
+	CCSize spriteSize = sprite->getContentSize();
+	float spriteScale = sprite->getScale();
+
+	if ( spritePosition.x - spriteSize.width * spriteScale / 2<= point.x
+		&& spritePosition.x + spriteSize.width * spriteScale / 2 >= point.x
+		&& spritePosition.y - spriteSize.height * spriteScale / 2<= point.y
+		&& spritePosition.y + spriteSize.height * spriteScale / 2 >= point.y) {
+			// if sprite touched
+		return true;
+	} else {
+		return false;
+	}
 }
