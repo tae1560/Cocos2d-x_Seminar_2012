@@ -54,27 +54,29 @@ bool TestLayer::init() {
 //    moveSprite->runAction(moveTo);
 //    
     srand(time(NULL));
+	totalTime = 0;
 
-    for (int i=0; i<50; i++) {
+    for (int i=0; i<10; i++) {
         // bullet 생성
         BulletSprite* bullet = new BulletSprite();
         bullet->initWithFile("CloseNormal.png");
         this->addChild(bullet);
-        bullet->setPosition(ccp(rand() % 500, rand() % 500));
+		//위치설정
+        bullet->setPosition(ccp(rand() % 500, 0));
         bullet->release();
         
         bullets.push_back(bullet);
-        
-        bullet->setVelocity(ccp(rand() % 40, rand() % 40));
+        //속도설정
+        bullet->setVelocity(ccp(rand() % 100 - 50, rand() % 80 - 40));
     }
     
     this->schedule(schedule_selector(TestLayer::myScheduler));
     
 	this->setTouchEnabled(true);
 
-	followSprite = CCSprite::spriteWithFile("HelloWorld.png");
+	followSprite = CCSprite::spriteWithFile("plane.png");
 	this->addChild(followSprite);
-	followSprite->setScale(0.3f);
+	//followSprite->setScale(0.3f);
 
 	followSprite->setPosition( ccp(200, 150) );
 
@@ -82,27 +84,47 @@ bool TestLayer::init() {
 	this->addChild(stateLabel);
 	stateLabel->setPosition(ccp(200, 400));
 
+	char temp[10];
+	int t = -5 % 3;
+	sprintf(temp, "%d", t);
+	stateLabel->setString(temp);
+
 	return true;
 }
 
 void TestLayer::myScheduler(float dt) {
     totalTime += dt;
+
+	char buf[100];
+	sprintf(buf, "%f", totalTime);
+	stateLabel->setString(buf);
     
     for (int i=0; i<bullets.size(); i++) {
         BulletSprite* bullet = bullets[i];
         
-        int x = bullet->getPosition().x;
-        int y = bullet->getPosition().y;
-        int vx = bullet->getVelocity().x;
-        int vy = bullet->getVelocity().y;
+        float x = bullet->getPosition().x;
+        float y = bullet->getPosition().y;
+
+		// -20~19
+        float vx = bullet->getVelocity().x * dt;
+        float vy = bullet->getVelocity().y * dt;
         
         float width = CCDirector::sharedDirector()->getWinSize().width;
         float height = CCDirector::sharedDirector()->getWinSize().height;
         
         bullet->setPosition(ccp(
-                                (x + vx) % (int)width, 
-                                (y + vy) % (int)height));
+                                (int)(x + vx + width) % (int)width, 
+                                (int)(y + vy + height) % (int)height));
         
+
+		if ( followSprite->boundingBox().
+			intersectsRect(
+			bullet->boundingBox())) {
+			// event 처리 부딪혔을때
+				stateLabel->setString("부딪힘 ㅠㅠ");
+				CCDirector::sharedDirector()
+					->stopAnimation();
+		}
     }
 }
 
@@ -111,11 +133,14 @@ void TestLayer::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent) {
 	CCPoint point = touch->getLocation();
 	CCLog("Began %f %f", point.x, point.y);
 
+	followSprite->setPosition(point);
+
+	/*
 	if (isSpriteIncludePoint(followSprite, point)) 
 		stateLabel->setString("Sprite touched");
 	else
 		stateLabel->setString("Not touched");
-
+		*/
 
 	
 }
@@ -123,6 +148,8 @@ void TestLayer::ccTouchesMoved(CCSet *pTouches, CCEvent *pEvent) {
 	CCTouch *touch = (CCTouch *)pTouches->anyObject();
 	CCPoint point = touch->getLocation();
 	CCLog("Moved %f %f", point.x, point.y);
+
+	followSprite->setPosition(point);
 
 	// make followSprite to follow touch location
 	//followSprite->setPosition(point);
