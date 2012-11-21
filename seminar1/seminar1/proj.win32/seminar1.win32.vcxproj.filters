@@ -55,6 +55,9 @@
     <ClInclude Include="..\classes\BulletSprite.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\DragonFlightLayer.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -70,6 +73,9 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="..\classes\BulletSprite.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\DragonFlightLayer.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>

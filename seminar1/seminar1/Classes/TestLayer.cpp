@@ -89,6 +89,14 @@ bool TestLayer::init() {
 	sprintf(temp, "%d", t);
 	stateLabel->setString(temp);
 
+
+
+	// followSprite
+	// 100,100으로 움직이게 하고싶음
+	CCMoveTo *moveTo = CCMoveTo::create(3.0f, ccp(100,100));
+	followSprite->runAction(moveTo);
+
+
 	return true;
 }
 

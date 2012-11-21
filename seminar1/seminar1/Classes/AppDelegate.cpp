@@ -3,6 +3,7 @@
 #include "AppDelegate.h"
 #include "TestLayer.h"
 #include "SimpleAudioEngine.h"
+#include "DragonFlightLayer.h"
 
 using namespace CocosDenshion;
 
@@ -34,7 +35,7 @@ bool AppDelegate::applicationDidFinishLaunching()
 
     // create a scene. it's an autorelease object
 	CCScene *pScene = CCScene::create();
-	TestLayer *layer = new TestLayer();
+	DragonFlightLayer *layer = new DragonFlightLayer();
 	layer->init();
 	pScene->addChild(layer);
 	layer->release();

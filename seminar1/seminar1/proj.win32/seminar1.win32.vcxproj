@@ -134,6 +134,7 @@
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\classes\BulletSprite.h" />
     <ClInclude Include="..\Classes\common.h" />
+    <ClInclude Include="..\Classes\DragonFlightLayer.h" />
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
     <ClInclude Include="..\Classes\TestLayer.h" />
     <ClInclude Include="main.h" />
@@ -142,6 +143,7 @@
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\classes\BulletSprite.cpp" />
+    <ClCompile Include="..\Classes\DragonFlightLayer.cpp" />
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
     <ClCompile Include="..\Classes\TestLayer.cpp" />
     <ClCompile Include="main.cpp" />
