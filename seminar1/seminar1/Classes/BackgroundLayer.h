@@ -22,10 +22,12 @@
 #include "common.h"
 
 class BackgroundLayer : public CCLayer {
-    
+    float background_size;
     
 public:
     bool init();
+    
+    void myScheduler(float dt);
 };
 
 #endif
