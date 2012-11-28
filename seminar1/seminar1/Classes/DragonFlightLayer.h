@@ -6,11 +6,12 @@
 #include "common.h"
 #include <list>
 
+class YoumSprite;
 class DragonFlightLayer : public CCLayer {
 private:
 	CCSprite *player;
 	float before_x;
-	list<CCSprite *> enemies;
+	list<YoumSprite *> enemies;
     list<CCSprite *> bullets;
     float total_time;
 
@@ -18,7 +19,7 @@ public:
 	virtual bool init();
 
 	void createEnemy();
-	void afterMoveTo(CCNode* node);
+	void delete_enemy(CCNode* node);
 
 	// CCTouchDelegate
 	virtual void ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent);

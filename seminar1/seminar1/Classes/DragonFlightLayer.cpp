@@ -1,5 +1,6 @@
 // DragonFlightLayer.cpp
 #include "DragonFlightLayer.h"
+#include "YoumSprite.h"
 
 bool DragonFlightLayer::init() 
 {
@@ -61,7 +62,7 @@ void DragonFlightLayer::createEnemy() {
 
 	for (int i=0; i<5; i++) {
 		// enemy
-		CCSprite* sprite = CCSprite::create("CloseNormal.png");
+		YoumSprite* sprite = YoumSprite::create("CloseNormal.png");
 		this->addChild(sprite);
 
 		// add to list
@@ -79,7 +80,7 @@ void DragonFlightLayer::createEnemy() {
 		// call function
 		CCCallFuncN *callFunc = CCCallFuncN::create(
 			this,
-			callfuncN_selector(DragonFlightLayer::afterMoveTo));
+			callfuncN_selector(DragonFlightLayer::delete_enemy));
 		// sequence
 		CCActionInterval *seq = (CCActionInterval*) 
 			CCSequence::create(moveTo, callFunc, NULL);
@@ -88,11 +89,11 @@ void DragonFlightLayer::createEnemy() {
 	}
 }
 
-void DragonFlightLayer::afterMoveTo(CCNode* node) {
+void DragonFlightLayer::delete_enemy(CCNode* node) {
 	node->removeFromParentAndCleanup(true);
 	
 	// remove to list
-	enemies.remove((CCSprite*)node);
+	enemies.remove((YoumSprite*)node);
 }
 
 
@@ -133,15 +134,14 @@ void DragonFlightLayer::myScheduler(float dt) {
     
 	// player¥¬ ¿÷¿Ω
 	// enemiesµµ ¿÷¿Ω
-	list<CCSprite *>::iterator iter;
+	list<YoumSprite *>::iterator iter;
 	for (iter = enemies.begin(); iter != enemies.end(); iter++) {
         // iterate enemy
-		CCSprite *enemy = *iter;
+		YoumSprite *enemy = *iter;
 		
 		if (enemy->boundingBox().intersectsRect(player->boundingBox())) {
 			// √Êµπ ≥≠∞Õ
-			enemies.remove(enemy);
-			this->afterMoveTo(enemy);
+			this->delete_enemy(enemy);
 			break;
 		}
         
@@ -151,11 +151,15 @@ void DragonFlightLayer::myScheduler(float dt) {
             
             if (enemy->boundingBox().intersectsRect(bullet->boundingBox())) {
                 // enemy hited by bullet
+                this->delete_bullet(bullet);
                 
-                // 적에너지만 단다!!!!
-                // 적에너지가 있어야한다.
-                // 클래스 생성
+                enemy->decrease_hp(50);
+                if (! enemy->is_alive()) {
+                    // remove enemy
+                    this->delete_enemy(enemy);
+                }
             }
+            break;
         }
 	}
     
