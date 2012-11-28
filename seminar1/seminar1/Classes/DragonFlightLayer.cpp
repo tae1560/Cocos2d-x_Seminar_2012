@@ -30,7 +30,7 @@ bool DragonFlightLayer::init()
 	// æ◊º« Ω««‡
 	this->runAction(repeatAction);
     
-    CCDelayTime *delay_0_1s = CCDelayTime::create(0.1);
+    CCDelayTime *delay_0_1s = CCDelayTime::create(0.5);
     CCCallFunc *call_fire_bullet_function = CCCallFunc::create(this, callfunc_selector( DragonFlightLayer::fire_bullet ));
     
     CCSequence *calling_every_time =
@@ -150,5 +150,24 @@ void DragonFlightLayer::myScheduler(float dt) {
 }
 
 void DragonFlightLayer::fire_bullet() {
-    CCLog("DragonFlightLayer::fire_bullet");
+    // firebullet
+    CCSprite* bullet = CCSprite::create("plane.png");
+    this->addChild(bullet);
+    
+    bullet->setPosition(player->getPosition());
+    
+    CCMoveBy *moveby = CCMoveBy::create(5.0,
+        ccp(0, CCDirector::sharedDirector()->getWinSize().height));
+    
+    CCCallFuncN *delete_bullet = CCCallFuncN::create(
+                                                this,
+                                                callfuncN_selector(DragonFlightLayer::delete_bullet));
+    
+    bullet->runAction(CCSequence::create(moveby,
+                                         delete_bullet,
+                                         NULL));
+}
+
+void DragonFlightLayer::delete_bullet(CCNode* node) {
+    node->removeFromParentAndCleanup(true);
 }

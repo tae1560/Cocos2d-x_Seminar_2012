@@ -27,5 +27,6 @@ public:
 	void myScheduler(float dt);
     
     void fire_bullet();
+    void delete_bullet(CCNode* node);
 };
 #endif
