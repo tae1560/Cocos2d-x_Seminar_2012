@@ -7,31 +7,39 @@ bool DragonFlightLayer::init()
 		return false;
 	
 
-	// 5ÃÊ¸¶´Ù ÇÑ¹ø¾¿ »ý¼º
-	// »ý¼ºµÈ °ÍµéÀº ÀÌµ¿
-	// ÀÌµ¿ÀÌ ³¡³ª¸é »èÁ¦
+	// 5âˆšÂ âˆâˆ‚Â¥Å¸ Â«â€”Ï€Â¯Ã¦Ã¸ ÂªËÂºâˆ«
+	// ÂªËÂºâˆ«ÂµÂ» âˆžÃ•ÂµÃˆÂ¿âˆ« Â¿ÃƒÂµÃ¸
+	// Â¿ÃƒÂµÃ¸Â¿Ãƒ â‰¥Â°â‰¥â„¢âˆÃˆ ÂªÃ‹Â¡Â¶
 	 
-	// ½Ã°£µ¿¾È ±â´Ù¸®´Â ¾×¼Ç
-	CCDelayTime *delay = CCDelayTime::create(5.0); // ½Ã°£ : 5.0ÃÊ  
+	// Î©âˆšâˆžÂ£ÂµÃ¸Ã¦Â» Â±â€šÂ¥Å¸âˆÃ†Â¥Â¬ Ã¦â—ŠÂºÂ«
+	CCDelayTime *delay = CCDelayTime::create(5.0); // Î©âˆšâˆžÂ£ : 5.0âˆšÂ   
 
-	// ÇÔ¼ö¸¦ È£ÃâÇÏ´Â ¾×¼Ç
+	// Â«â€˜ÂºË†âˆÂ¶ Â»Â£âˆšâ€šÂ«Å“Â¥Â¬ Ã¦â—ŠÂºÂ«
 	CCCallFunc *callCreateFunction = CCCallFunc::create(this,
 		callfunc_selector(DragonFlightLayer::createEnemy));
 
-	// ¾×¼ÇµéÀ» ¹­¾î ÁÙ °Í  ÂüÁ¶ : CCSpawn
+	// Ã¦â—ŠÂºÂ«ÂµÃˆÂ¿Âª Ï€â‰ Ã¦Ã“ Â¡Å¸ âˆžÃ•  Â¬Â¸Â¡âˆ‚ : CCSpawn
 	CCFiniteTimeAction *seq = CCSequence::create(delay,
 		callCreateFunction,
 		NULL);
 
-	// ¹«ÇÑ¹Ýº¹ ¾×¼Ç
+	// Ï€Â´Â«â€”Ï€â€ºâˆ«Ï€ Ã¦â—ŠÂºÂ«
 	CCRepeatForever *repeatAction = CCRepeatForever::create(
 		(CCActionInterval*) seq);
 
-	// ¾×¼Ç ½ÇÇà
+	// Ã¦â—ŠÂºÂ« Î©Â«Â«â€¡
 	this->runAction(repeatAction);
+    
+    CCDelayTime *delay_0_1s = CCDelayTime::create(0.1);
+    CCCallFunc *call_fire_bullet_function = CCCallFunc::create(this, callfunc_selector( DragonFlightLayer::fire_bullet ));
+    
+    CCSequence *calling_every_time =
+        (CCSequence*)CCSequence::create(delay_0_1s, call_fire_bullet_function, NULL);
+    
+    this->runAction(CCRepeatForever::create( calling_every_time ));
 
 
-	// »ç¿ëÀÚ Ä³¸¯ÅÍ ¸¸µé±â
+	// ÂªÃÃ¸ÃŽÂ¿â„ Æ’â‰¥âˆÃ˜â‰ˆÃ• âˆâˆÂµÃˆÂ±â€š
 	player = CCSprite::create("plane.png");
 	this->addChild(player);
 
@@ -41,11 +49,13 @@ bool DragonFlightLayer::init()
 
 	this->setTouchEnabled(true);
 	this->schedule(schedule_selector(DragonFlightLayer::myScheduler));
+    
+    total_time = 0;
 
 	return true;
 }
 
-// createEnemy ±¸Çö
+// createEnemy Â±âˆÂ«Ë†
 void DragonFlightLayer::createEnemy() {
 	CCLOG("createEnemy");
 
@@ -103,7 +113,7 @@ void DragonFlightLayer::ccTouchesMoved(CCSet *pTouches, CCEvent *pEvent) {
 	CCPoint before_position = player->getPosition();
 	CCPoint after_position = ccp(before_position.x + diff, before_position.y);
 
-	// ¹ÛÀ¸·Î ³ª°¡Áö ¸¶!
+	// Ï€â‚¬Â¿âˆâˆ‘Å’ â‰¥â„¢âˆžÂ°Â¡Ë† âˆâˆ‚!
 	float screen_width = CCDirector::sharedDirector()->getWinSize().width;
 	if (after_position.x < 0) after_position.x = 0;
 	else if (after_position.x > screen_width) after_position.x = screen_width;
@@ -118,19 +128,27 @@ void DragonFlightLayer::ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent) {
 }
 
 void DragonFlightLayer::myScheduler(float dt) {
-	// Ã¼Å©ÇÒ ´ë»ó : player vs enemy
-	// player´Â ÀÖÀ½
-	// enemiesµµ ÀÖÀ½
+	// âˆšÂºâ‰ˆÂ©Â«â€œ Â¥ÃŽÂªÃ› : player vs enemy
+    total_time += dt;
+    
+	// playerÂ¥Â¬ Â¿Ã·Â¿Î©
+	// enemiesÂµÂµ Â¿Ã·Â¿Î©
 	list<CCSprite *>::iterator iter;
 	list<CCSprite *>::iterator iter2;
 	for (iter = enemies.begin(); iter != enemies.end(); iter++) {
 		CCSprite *enemy = *iter;
 		
 		if (enemy->boundingBox().intersectsRect(player->boundingBox())) {
-			// Ãæµ¹ ³­°Í
+			// âˆšÃŠÂµÏ€ â‰¥â‰ âˆžÃ•
 			enemies.remove(enemy);
 			this->afterMoveTo(enemy);
 			break;
 		}
 	}
+    
+    
+}
+
+void DragonFlightLayer::fire_bullet() {
+    CCLog("DragonFlightLayer::fire_bullet");
 }
