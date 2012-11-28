@@ -14,3 +14,4 @@
 # Project files
 Debug.win32
 *.opensdf
+.DS_Store
