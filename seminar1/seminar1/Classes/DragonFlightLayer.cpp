@@ -135,6 +135,7 @@ void DragonFlightLayer::myScheduler(float dt) {
 	// player¥¬ ¿÷¿Ω
 	// enemiesµµ ¿÷¿Ω
 	list<YoumSprite *>::iterator iter;
+    bool is_bullet_deleted = false;
 	for (iter = enemies.begin(); iter != enemies.end(); iter++) {
         // iterate enemy
 		YoumSprite *enemy = *iter;
@@ -157,8 +158,14 @@ void DragonFlightLayer::myScheduler(float dt) {
                 if (! enemy->is_alive()) {
                     // remove enemy
                     this->delete_enemy(enemy);
+                    is_bullet_deleted = true;
                 }
+                
+                break;
             }
+        }
+        
+        if (is_bullet_deleted) {
             break;
         }
 	}
