@@ -134,8 +134,8 @@ void DragonFlightLayer::myScheduler(float dt) {
 	// player¥¬ ¿÷¿Ω
 	// enemiesµµ ¿÷¿Ω
 	list<CCSprite *>::iterator iter;
-	list<CCSprite *>::iterator iter2;
 	for (iter = enemies.begin(); iter != enemies.end(); iter++) {
+        // iterate enemy
 		CCSprite *enemy = *iter;
 		
 		if (enemy->boundingBox().intersectsRect(player->boundingBox())) {
@@ -144,8 +144,20 @@ void DragonFlightLayer::myScheduler(float dt) {
 			this->afterMoveTo(enemy);
 			break;
 		}
+        
+        list<CCSprite *>::iterator bullet_iter;
+        for (bullet_iter = bullets.begin(); bullet_iter != bullets.end(); bullet_iter++) {
+            CCSprite *bullet = *bullet_iter;
+            
+            if (enemy->boundingBox().intersectsRect(bullet->boundingBox())) {
+                // enemy hited by bullet
+                
+                // 적에너지만 단다!!!!
+                // 적에너지가 있어야한다.
+                // 클래스 생성
+            }
+        }
 	}
-    
     
 }
 
@@ -153,6 +165,8 @@ void DragonFlightLayer::fire_bullet() {
     // firebullet
     CCSprite* bullet = CCSprite::create("plane.png");
     this->addChild(bullet);
+    
+    bullets.push_back(bullet);
     
     bullet->setPosition(player->getPosition());
     
@@ -170,4 +184,6 @@ void DragonFlightLayer::fire_bullet() {
 
 void DragonFlightLayer::delete_bullet(CCNode* node) {
     node->removeFromParentAndCleanup(true);
+    
+    bullets.remove((CCSprite*)node);
 }

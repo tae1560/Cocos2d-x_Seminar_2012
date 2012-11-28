@@ -11,6 +11,7 @@ private:
 	CCSprite *player;
 	float before_x;
 	list<CCSprite *> enemies;
+    list<CCSprite *> bullets;
     float total_time;
 
 public:
