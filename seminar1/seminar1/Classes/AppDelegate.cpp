@@ -4,6 +4,7 @@
 #include "TestLayer.h"
 #include "SimpleAudioEngine.h"
 #include "DragonFlightLayer.h"
+#include "BackgroundLayer.h"
 
 using namespace CocosDenshion;
 
@@ -35,9 +36,15 @@ bool AppDelegate::applicationDidFinishLaunching()
 
     // create a scene. it's an autorelease object
 	CCScene *pScene = CCScene::create();
+    
+    BackgroundLayer *background_layer = new BackgroundLayer();
+    background_layer->init();
+	pScene->addChild(background_layer, 0);
+	background_layer->release();
+    
 	DragonFlightLayer *layer = new DragonFlightLayer();
 	layer->init();
-	pScene->addChild(layer);
+	pScene->addChild(layer, 1);
 	layer->release();
 
     // run
