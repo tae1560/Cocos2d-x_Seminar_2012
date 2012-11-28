@@ -142,7 +142,18 @@ void DragonFlightLayer::myScheduler(float dt) {
 		
 		if (enemy->boundingBox().intersectsRect(player->boundingBox())) {
 			// √Êµπ ≥≠∞Õ
-			this->delete_enemy(enemy);
+			
+            CCScene* scene = CCScene::create();
+            
+            CCLayer* layer = CCLayer::create();
+            scene->addChild(layer);
+            
+            CCLabelTTF* gameoverLabel = CCLabelTTF::create("Jinji GameOver", "궁서체", 50);
+            layer->addChild(gameoverLabel);
+            gameoverLabel->setPosition(ccp(layer->getContentSize().width / 2, layer->getContentSize().height / 2));
+            
+            CCDirector::sharedDirector()->replaceScene(scene);
+            
 			break;
 		}
         
