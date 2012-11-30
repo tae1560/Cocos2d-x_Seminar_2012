@@ -148,7 +148,7 @@ void DragonFlightLayer::myScheduler(float dt) {
             CCLayer* layer = CCLayer::create();
             scene->addChild(layer);
             
-            CCLabelTTF* gameoverLabel = CCLabelTTF::create("Jinji GameOver", "궁서체", 50);
+            CCLabelTTF* gameoverLabel = CCLabelTTF::create("Jinji GameOver", "arial", 50);
             layer->addChild(gameoverLabel);
             gameoverLabel->setPosition(ccp(layer->getContentSize().width / 2, layer->getContentSize().height / 2));
             

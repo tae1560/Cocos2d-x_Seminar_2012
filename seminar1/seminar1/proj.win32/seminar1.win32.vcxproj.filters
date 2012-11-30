@@ -58,6 +58,12 @@
     <ClInclude Include="..\Classes\DragonFlightLayer.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\YoumSprite.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BackgroundLayer.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -76,6 +82,12 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\DragonFlightLayer.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BackgroundLayer.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\YoumSprite.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
